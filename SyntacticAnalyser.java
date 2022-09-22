@@ -11,113 +11,124 @@ public class SyntacticAnalyser {
 
 		  	static Stack<Token> stack = new Stack<Token>();
 	public static ParseTree parse(List<Token> tokens) throws SyntaxException {
+
 		if(tokens.size() == 0) throw new SyntaxException(tokens.toString());
-			  TreeNode root = new TreeNode(TreeNode.Label.prog, null);
-			  ParseTree tree = new ParseTree();
-			  TreeNode node = null;
-			  tree.setRoot(root);
+			//Set new root as prog and null
+			TreeNode root = new TreeNode(TreeNode.Label.prog, null);
+			//Create a new empty tree
+			ParseTree tree = new ParseTree();
+			//add the new root to the empty tree as its root
+			tree.setRoot(root);
+			//Store the current parent as root, and then change when a variable is seen
+			TreeNode currParent = root;
+
 			for(Token token : tokens) {
-				Token.TokenType currentType = token.getType();
-				
+				//Set current type as current tokens type
+				Token.TokenType currType = token.getType();
+	
 			if(stack.size() > 0) {
+				//Peak into stack and dont read
 				Token currPeek = stack.peek();
 
 				if(currPeek.getType() == Token.TokenType.PUBLIC) {
-					switch(currentType) {
-						default: node =  new TreeNode(state = TreeNode.Label.terminal, stack.pop(), root);
-						; break;
-					}
-					}
-					if(currPeek.getType() == Token.TokenType.CLASS) {
-					switch(currentType) {
-						default: node = new TreeNode(TreeNode.Label.terminal, stack.pop(), root);
-					; break;
-					}
-					}
-					if(currPeek.getType() == Token.TokenType.ID) {
-					switch(currentType) {
-						default :node =  new TreeNode(TreeNode.Label.terminal, stack.pop(), root);
-					; break;
-					}
-}
-
-					if(currPeek.getType() == Token.TokenType.STATIC) {
-					switch(currentType) {
-						default: node = new TreeNode(TreeNode.Label.terminal, stack.pop(), root);
-					; break;
-					}
-					}
-					if(currPeek.getType() == Token.TokenType.VOID) {
-					switch(currentType) {
-						default : node = new TreeNode(TreeNode.Label.terminal, stack.pop(), root);
-					; break;
-					}
-					}
-					if(currPeek.getType() == Token.TokenType.MAIN) {
-					switch(currentType) {
-						default: node = new TreeNode(TreeNode.Label.terminal, stack.pop(), root);
-					; break;
-					}
-					}
-					if(currPeek.getType() == Token.TokenType.LPAREN) {
-					switch(currentType) {
-						default: new TreeNode(TreeNode.Label.terminal, stack.pop(), root);
-; break;
-					}
-}
-					if(currPeek.getType() == Token.TokenType.STRINGARR) {
-					switch(currentType) {
-						default:node =  new TreeNode(TreeNode.Label.terminal, stack.pop(), root);
-; break;
-					}
-}
-					if(currPeek.getType() == Token.TokenType.ARGS) {
-					switch(currentType) {
-						default : node = new TreeNode(TreeNode.Label.terminal, stack.pop(), root);
-; break;
-					}
-}
-					if(currPeek.getType() == Token.TokenType.RPAREN) {
-					switch(currentType) {
-						default:node =  new TreeNode(TreeNode.Label.terminal, stack.pop(), root);
-; break;
-					}
-}
-					if(currPeek.getType() == Token.TokenType.LBRACE) {
-					switch(currentType) {
-						case PUBLIC: node = new TreeNode(TreeNode.Label.terminal, stack.pop(), root);
-						break;
-						default: node = new TreeNode(TreeNode.Label.los, root);
+					switch(currType) {
+						case CLASS:
+						case STATIC: state = TreeNode.Label.terminal; 
 						stack.pop();
-; break;
-					}
-}
-					if(currPeek.getType() == Token.TokenType.RBRACE) {
-					switch(currentType) {
-						default:node =  new TreeNode(TreeNode.Label.terminal, stack.pop(), root);
-					; break;
-					}
-					}
-					if(currPeek.getType() == Token.TokenType.SEMICOLON) {
-					switch(currentType) {
-						default: node = new TreeNode(TreeNode.Label.terminal, stack.pop(), root);
-					; break;
+						break;
 					}
 				}
+				if(currPeek.getType() == Token.TokenType.CLASS) {
+					switch(currType) {
+						case ID: state = TreeNode.Label.terminal; 
+						stack.pop();
+						break;
+					}
+				}
+				if(currPeek.getType() == Token.TokenType.ID) {
+					switch(currType) {
+						case LBRACE: state = TreeNode.Label.terminal;
+						stack.pop();
+						break;
+					}
+				}
+				if(currPeek.getType() == Token.TokenType.LBRACE) {
+					switch(currType) {
+						case PUBLIC: state = TreeNode.Label.terminal;
+						stack.pop();
+						break;
+					}
+				}	
+				if(currPeek.getType() == Token.TokenType.STATIC) {
+					switch(currType) {
+						case PUBLIC: state = TreeNode.Label.terminal;
+						stack.pop();
+						break;
+					}
+				}	
+				if(currPeek.getType() == Token.TokenType.VOID) {
+					switch(currType) {
+						case STATIC: state = TreeNode.Label.terminal;
+						stack.pop();
+						break;
+					}
+				}	
+				if(currPeek.getType() == Token.TokenType.MAIN) {
+					switch(currType) {
+						case VOID: state = TreeNode.Label.terminal;
+						stack.pop();
+						break;
+					}
+				}	
+				if(currPeek.getType() == Token.TokenType.LPAREN) {
+					switch(currType) {
+						case MAIN: state = TreeNode.Label.terminal;
+						stack.pop();
+						break;
+					}
+				}	
+				if(currPeek.getType() == Token.TokenType.STRINGARR) {
+					switch(currType) {
+						case LPAREN: state = TreeNode.Label.terminal;
+						stack.pop();
+						break;
+					}
+				}	
+				if(currPeek.getType() == Token.TokenType.ARGS) {
+					switch(currType) {
+						case STRINGARR: state = TreeNode.Label.terminal;
+						stack.pop();
+						break;
+					}
+				}	
+				if(currPeek.getType() == Token.TokenType.RPAREN) {
+					switch(currType) {
+						case ARGS: state = TreeNode.Label.terminal;
+						stack.pop();
+						break;
+					}
+				}	
+				if(currPeek.getType() == Token.TokenType.RBRACE) {
+					switch(currType) {
+						case RBRACE:
+						case LBRACE: state = TreeNode.Label.terminal;
+						stack.pop();
+						break;
+					}
+				}	
+			
+				
+					
 				
 			
 				}
-				
-				System.out.println(stack.size());
-				 stack.push(token);
-				// if(stack.size() > 0) throw new SyntaxException("Broke");
+				currParent.addChild(new TreeNode(state, token, currParent));
+				stack.push(token);
 			}
-				root.addChild(node = new TreeNode(TreeNode.Label.terminal, stack.pop(), root));
-				// node.getLabel();
-			// if(stack.size() > 0) throw new SyntaxException("Broke stack not empty");
-			// if(stack.size() > 1) throw new SyntaxException(tokens.toString());
-			// System.out.println(root.getChildren());
-			// System.out.println(root.getChildren());
+			stack.pop();
+			System.out.println(root.getChildren());
+
+			// if(stack.size() > 0) throw new SyntaxException(tokens.toString());
 		return tree;
 
 		
