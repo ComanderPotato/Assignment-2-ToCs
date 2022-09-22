@@ -4,7 +4,7 @@ public class ParseTree {
 
 	public ParseTree() {
 		this.root = null;
-	}
+	]
 
 	public ParseTree(TreeNode root) {
 		this.root = root;
