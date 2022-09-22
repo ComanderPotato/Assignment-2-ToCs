@@ -124,8 +124,9 @@ public class SyntacticAnalyser {
 				}
 				currParent.addChild(new TreeNode(state, token, currParent));
 				stack.push(token);
+							stack.pop();
+
 			}
-			stack.pop();
 			System.out.println(root.getChildren());
 
 			// if(stack.size() > 0) throw new SyntaxException(tokens.toString());
