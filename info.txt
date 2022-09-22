@@ -1,0 +1,37 @@
+TreeNode assign = new TreeNode(TreeNode.Label.assign, null);
+TreeNode id = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.ID, "x"), assign);
+TreeNode equal = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.ASSIGN), assign);
+TreeNode expr = new TreeNode(TreeNode.Label.expr, assign);
+assign.addChild(id);
+assign.addChild(equal);
+assign.addChild(expr);
+
+ParseTree smallTree = new ParseTree();
+smallTree.setRoot(assign);
+
+System.out.println(smallTree);
+
+
+
+for(loop through tokens) {
+    finalStack = []; //IF empty on completion no errors
+    que stack [];
+    if(determine if terminal or variable) {
+        push to final stack``
+    }
+
+    for(final stack)) {
+        if(termianl) {
+            pop from final stack
+        }
+        if(variable) {
+            pop from final stack
+            push to que stack for next iteration
+        }
+    }
+
+    if(!finalStack.isEmpty()) throw new SyntaxException;
+    return parseTree;
+}
+
+
