@@ -7,35 +7,36 @@ import java.util.Map;
 import java.util.*;
 public class SyntacticAnalyser {
 
-	static TreeNode.Label state = TreeNode.Label.prog;
 
-		  	static Stack<Token> stack = new Stack<Token>();
+	static TreeNode.Label state = TreeNode.Label.prog;
+	static Stack<Token> stack = new Stack<Token>();
 	public static ParseTree parse(List<Token> tokens) throws SyntaxException {
 
 		if(tokens.size() == 0) throw new SyntaxException(tokens.toString());
 			//Set new root as prog and null
-			TreeNode root = new TreeNode(TreeNode.Label.prog, null);
+			TreeNode root = new TreeNode(state, null);
 			//Create a new empty tree
 			ParseTree tree = new ParseTree();
 			//add the new root to the empty tree as its root
 			tree.setRoot(root);
 			//Store the current parent as root, and then change when a variable is seen
 			TreeNode currParent = root;
-
+			state = TreeNode.Label.terminal;
 			for(Token token : tokens) {
+			// System.out.println(currParent);
 				//Set current type as current tokens type
 				Token.TokenType currType = token.getType();
-	
 			if(stack.size() > 0) {
 				//Peak into stack and dont read
 				Token currPeek = stack.peek();
-
+			
 				if(currPeek.getType() == Token.TokenType.PUBLIC) {
 					switch(currType) {
 						case CLASS:
-						case STATIC: state = TreeNode.Label.terminal; 
-						stack.pop();
-						break;
+						case STATIC: 
+							state = TreeNode.Label.terminal; 
+							stack.pop();
+							break;
 					}
 				}
 				if(currPeek.getType() == Token.TokenType.CLASS) {
@@ -57,53 +58,64 @@ public class SyntacticAnalyser {
 						case PUBLIC: state = TreeNode.Label.terminal;
 						stack.pop();
 						break;
+						case RBRACE:
+						state = TreeNode.Label.los;
+						TreeNode newRoot = new TreeNode(state, currParent);
+						currParent.addChild(newRoot);
+						currParent = newRoot;
+						stack.pop();
+						stack.push(token);
+						break;
 					}
 				}	
 				if(currPeek.getType() == Token.TokenType.STATIC) {
 					switch(currType) {
-						case PUBLIC: state = TreeNode.Label.terminal;
+						case PUBLIC: 
+						case VOID:
+						state = TreeNode.Label.terminal;
 						stack.pop();
 						break;
 					}
 				}	
 				if(currPeek.getType() == Token.TokenType.VOID) {
 					switch(currType) {
-						case STATIC: state = TreeNode.Label.terminal;
+						case MAIN:
+						state = TreeNode.Label.terminal;
 						stack.pop();
 						break;
 					}
 				}	
 				if(currPeek.getType() == Token.TokenType.MAIN) {
 					switch(currType) {
-						case VOID: state = TreeNode.Label.terminal;
+						case LPAREN: state = TreeNode.Label.terminal;
 						stack.pop();
 						break;
 					}
 				}	
 				if(currPeek.getType() == Token.TokenType.LPAREN) {
 					switch(currType) {
-						case MAIN: state = TreeNode.Label.terminal;
+						case STRINGARR: state = TreeNode.Label.terminal;
 						stack.pop();
 						break;
 					}
 				}	
 				if(currPeek.getType() == Token.TokenType.STRINGARR) {
 					switch(currType) {
-						case LPAREN: state = TreeNode.Label.terminal;
+						case ARGS: state = TreeNode.Label.terminal;
 						stack.pop();
 						break;
 					}
 				}	
 				if(currPeek.getType() == Token.TokenType.ARGS) {
 					switch(currType) {
-						case STRINGARR: state = TreeNode.Label.terminal;
+						case RPAREN: state = TreeNode.Label.terminal;
 						stack.pop();
 						break;
 					}
 				}	
 				if(currPeek.getType() == Token.TokenType.RPAREN) {
 					switch(currType) {
-						case ARGS: state = TreeNode.Label.terminal;
+						case LBRACE: state = TreeNode.Label.terminal;
 						stack.pop();
 						break;
 					}
@@ -116,18 +128,33 @@ public class SyntacticAnalyser {
 						break;
 					}
 				}	
-			
+				
+				if(currParent != root) {
+					if(currParent.getLabel() == TreeNode.Label.los) {
+						state = TreeNode.Label.epsilon;
+					}
+				}
 				
 					
 				
-			
-				}
-				currParent.addChild(new TreeNode(state, token, currParent));
-				stack.push(token);
-			}
-			stack.pop();
-			System.out.println(root.getChildren());
 
+				}
+				if(state == TreeNode.Label.epsilon) {
+					 currParent.addChild(new TreeNode(state, currParent));
+					 currParent = root;
+				}  
+				if(state != TreeNode.Label.epsilon) {
+				currParent.addChild(new TreeNode(state, token, currParent));
+
+				}
+				
+				//  stack.pop();
+				if(currParent == root) stack.push(token);
+			// currParent.addChild(new TreeNode(TreeNode.Label.terminal, token, currParent));
+			}
+			if(stack.size() > 1 ) currParent.addChild(new TreeNode(state, stack.pop(), currParent));
+				System.out.println(tree.toString());
+				// System.out.println(stack);
 			// if(stack.size() > 0) throw new SyntaxException(tokens.toString());
 		return tree;
 
