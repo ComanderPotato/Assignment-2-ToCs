@@ -8,11 +8,11 @@ import java.util.*;
 public class SyntacticAnalyser {
 
 
-	static TreeNode.Label state = TreeNode.Label.prog;
 	static Stack<Token> stack = new Stack<Token>();
 	public static ParseTree parse(List<Token> tokens) throws SyntaxException {
 
 		if(tokens.size() == 0) throw new SyntaxException(tokens.toString());
+	TreeNode.Label state = TreeNode.Label.prog;
 			//Set new root as prog and null
 			TreeNode root = new TreeNode(state, null);
 			//Create a new empty tree
@@ -21,11 +21,11 @@ public class SyntacticAnalyser {
 			tree.setRoot(root);
 			//Store the current parent as root, and then change when a variable is seen
 			TreeNode currParent = root;
-			state = TreeNode.Label.terminal;
+
 			for(Token token : tokens) {
-			// System.out.println(currParent);
 				//Set current type as current tokens type
 				Token.TokenType currType = token.getType();
+
 			if(stack.size() > 0) {
 				//Peak into stack and dont read
 				Token currPeek = stack.peek();
@@ -134,19 +134,6 @@ public class SyntacticAnalyser {
 						state = TreeNode.Label.epsilon;
 					}
 				}
-				
-					
-				
-			
-				}
-				currParent.addChild(new TreeNode(state, token, currParent));
-				stack.push(token);
-							stack.pop();
-
-			}
-			System.out.println(root.getChildren());
-
-				}
 				if(state == TreeNode.Label.epsilon) {
 					 currParent.addChild(new TreeNode(state, currParent));
 					 currParent = root;
@@ -155,14 +142,20 @@ public class SyntacticAnalyser {
 				currParent.addChild(new TreeNode(state, token, currParent));
 
 				}
+					
+				
+
+				}
 				
 				//  stack.pop();
+				if(root.getChildren().size() == 0) currParent.addChild(new TreeNode(state, token, currParent));
 				if(currParent == root) stack.push(token);
 			// currParent.addChild(new TreeNode(TreeNode.Label.terminal, token, currParent));
 			}
-			if(stack.size() > 1 ) currParent.addChild(new TreeNode(state, stack.pop(), currParent));
-				System.out.println(tree.toString());
-				// System.out.println(stack);
+			if(stack.size() > 1 ) {
+				currParent.addChild(new TreeNode(state, stack.pop(), currParent));
+				stack.pop();
+			}
 			// if(stack.size() > 0) throw new SyntaxException(tokens.toString());
 		return tree;
 
