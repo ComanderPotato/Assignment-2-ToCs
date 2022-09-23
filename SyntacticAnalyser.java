@@ -137,8 +137,6 @@ public class SyntacticAnalyser {
 				
 					
 				
-<<<<<<< HEAD
-=======
 			
 				}
 				currParent.addChild(new TreeNode(state, token, currParent));
@@ -147,7 +145,6 @@ public class SyntacticAnalyser {
 
 			}
 			System.out.println(root.getChildren());
->>>>>>> c9889119108a1380d53bdddc6756109e6d9f8fed
 
 				}
 				if(state == TreeNode.Label.epsilon) {
