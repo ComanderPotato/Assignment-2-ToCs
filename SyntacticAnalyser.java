@@ -18,36 +18,36 @@ public class SyntacticAnalyser {
 		stack.push(currentParent);
 		int listSize = tokens.size();
 		int i = 0;
-		//RULE 1 needs to be refactored
-		if(stack.peek().getLabel() == TreeNode.Label.prog) {
-			stack.pop();
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RBRACE), currentParent));
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RBRACE), currentParent));
-			stack.push(new TreeNode(TreeNode.Label.los, currentParent));
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LBRACE), currentParent));
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RPAREN), currentParent));
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.ARGS), currentParent));
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.STRINGARR), currentParent));
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LPAREN), currentParent));
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.MAIN), currentParent));
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.VOID), currentParent));
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.STATIC), currentParent));
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.PUBLIC), currentParent));
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LBRACE), currentParent));
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.ID), currentParent));
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.CLASS), currentParent));
-			stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.PUBLIC), currentParent));
-			
-		}
-		
-		Token token = tokens.get(i);
-		while(listSize > i) {
-		
-		if(stack.peek().getLabel() == TreeNode.Label.los) {
-			stack.pop();
-			stack.push(new TreeNode(TreeNode.Label.los, currentParent));
-			stack.push(new TreeNode(TreeNode.Label.stat, currentParent));
-			
+	while(listSize > i) {
+			//RULE 1 needs to be refactored
+			if(stack.peek().getLabel() == TreeNode.Label.prog) {
+				stack.pop();
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RBRACE), currentParent));
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RBRACE), currentParent));
+				stack.push(new TreeNode(TreeNode.Label.los, currentParent));
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LBRACE), currentParent));
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RPAREN), currentParent));
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.ARGS), currentParent));
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.STRINGARR), currentParent));
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LPAREN), currentParent));
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.MAIN), currentParent));
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.VOID), currentParent));
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.STATIC), currentParent));
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.PUBLIC), currentParent));
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LBRACE), currentParent));
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.ID), currentParent));
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.CLASS), currentParent));
+				stack.push(new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.PUBLIC), currentParent));
+
+			}
+
+			Token token = tokens.get(i);
+
+			if(stack.peek().getLabel() == TreeNode.Label.los) {
+				stack.pop();
+				stack.push(new TreeNode(TreeNode.Label.los, currentParent));
+				stack.push(new TreeNode(TreeNode.Label.stat, currentParent));
+
 				if(token.getType() == Token.TokenType.RBRACE) {
 					stack.pop();
 					TreeNode los = new TreeNode(TreeNode.Label.los, currentParent);
