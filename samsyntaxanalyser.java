@@ -58,9 +58,9 @@ public class SyntacticAnalyser {
 				i++;
 			}
 //break if there are missing tokens for syntax (first few tests)
-			// else if (!stack.peek().isVariable()){
-			// 	throw new SyntaxException(tokens.toString());
-			// }
+			else if (!stack.peek().isVariable()){
+				throw new SyntaxException(tokens.toString());
+			}
 //if epsilon, make child, pop parent
 			else if(stack.peek()==TreeNode.Label.epsilon){
 				currentParent.addChild(new TreeNode(TreeNode.Label.epsilon, currentParent));
